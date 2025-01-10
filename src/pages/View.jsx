@@ -1,9 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToWishlist } from '../redux/slices/wishlistSlice'
+import { addToCart } from '../redux/slices/cartSlice'
 
 const View = () => {
+
+  const userCart = useSelector(state=>state.cartReducer)
+
+  const dispatch = useDispatch()
+  const userWishlist = useSelector(state=>state.wishlistReducer)
 
   const [product, setProduct] = useState({})
 
@@ -19,8 +26,24 @@ const View = () => {
     }
   },[])
 
-
+  const handleWishlist = ()=>{
+    const existingProduct = userWishlist?.find(item=>item?.id==id)
+    if(existingProduct){
+      alert("Product already in your Wishlist !!!")
+    }else{
+      dispatch(addToWishlist(product))
+    }
+  }
   
+  const handleCart = ()=>{
+    dispatch(addToCart(product))
+    const existingProduct = userCart?.find(item=>item?.id==id)
+    if(existingProduct){
+      alert("Product Quantity is Incrementing !!!")
+    }else{
+      alert("Product added to cart!!!")
+    }
+  }
 
   return (
     <>
@@ -30,8 +53,8 @@ const View = () => {
         <div>
           <img width={'450px'} height={'200px'} src={product?.thumbnail} alt="" />
           <div className='flex justify-between mt-5'>
-              <button className='bg-blue-600 text-white p-2'>Add to Wishlist</button>
-              <button className='bg-green-600 text-white p-2'>Add to Cart</button>
+              <button onClick={handleWishlist} className='bg-blue-600 text-white p-2'>Add to Wishlist</button>
+              <button onClick={handleCart} className='bg-green-600 text-white p-2'>Add to Cart</button>
             </div>
           </div>
         <div>
