@@ -1,8 +1,10 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { searchProduct } from '../redux/slices/productSlice'
 
 const Header = ({insideHome}) => {
+  const dispatch = useDispatch()
   const userCart = useSelector(state=>state.cartReducer)
   const userWishlist = useSelector(state=>state.wishlistReducer)
   return (
@@ -11,8 +13,9 @@ const Header = ({insideHome}) => {
         <ul className='flex-1 text-right'>
 
           {/* Making search bar visible to home page header only by declaring insideHome attribute in Hom.jsx and using && operator to enable it */}
+          {/* make the value we enter to lowercase to make it case sensitive */}
           {insideHome &&
-            <li className='list-none inline-block px-5'><input style={{width:'300px'}} className='rounded p-2' type="text" placeholder='Search Products Here...' /></li>
+            <li className='list-none inline-block px-5'><input onChange={(e)=>dispatch(searchProduct(e.target.value.toLowerCase()))} style={{width:'300px'}} className='rounded p-2 text-black' type="text" placeholder='Search Products Here...' /></li>
             }
 
             <li className='list-none inline-block px-5'><Link to={'/wishlist'}><i className='fa-solid fa-heart text-red-600'></i>Wishlist <span className='bg-black text-white rounded p-1'>{userWishlist?.length}</span></Link></li>
